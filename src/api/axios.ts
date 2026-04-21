@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: 'http://localhost:3333',
+  baseURL: 'http:
 })
 
 api.interceptors.request.use((config) => {
@@ -28,7 +28,7 @@ api.interceptors.response.use(
       }
 
       try {
-        const { data } = await axios.post('http://localhost:3333/auth/refresh', {
+        const { data } = await axios.post('http:
           refreshToken,
         })
         localStorage.setItem('accessToken', data.accessToken)

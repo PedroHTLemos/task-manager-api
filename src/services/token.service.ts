@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken'
 import prisma from '../prisma/client'
 
 const ACCESS_TOKEN_EXPIRY = '15m'
-const REFRESH_TOKEN_EXPIRY_MS = 7 * 24 * 60 * 60 * 1000 // 7 dias em ms
+const REFRESH_TOKEN_EXPIRY_MS = 7 * 24 * 60 * 60 * 1000 
 
 export function generateAccessToken(userId: string) {
   return jwt.sign({ sub: userId }, process.env.JWT_SECRET, {
