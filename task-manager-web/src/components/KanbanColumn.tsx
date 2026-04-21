@@ -20,25 +20,35 @@ interface Props {
 
 export function KanbanColumn({ id, title, color, tasks, onDelete }: Props) {
   return (
-    <div style={{ background: '#f8f8f8', borderRadius: 12, padding: '16px', minWidth: 280, flex: 1 }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-        <span style={{ width: 10, height: 10, borderRadius: '50%', background: color, display: 'inline-block' }} />
-        <h3 style={{ fontSize: 14, fontWeight: 500, margin: 0 }}>{title}</h3>
-        <span style={{ marginLeft: 'auto', fontSize: 12, color: '#888', background: '#e8e8e8', borderRadius: 20, padding: '1px 8px' }}>
+    <div style={{ minWidth: 280, flex: 1, maxWidth: 360 }}>
+      <div className="flex items-center gap-2 mb-3 px-1">
+        <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: color }}></div>
+        <span className="text-sm font-medium" style={{ color: '#c8c8e8' }}>{title}</span>
+        <span className="ml-auto text-xs px-2 py-0.5 rounded-full" style={{ background: '#1a1a2e', color: '#6b6b8a', border: '0.5px solid #2a2a45' }}>
           {tasks.length}
         </span>
       </div>
+
       <Droppable droppableId={id}>
         {(provided, snapshot) => (
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            style={{ minHeight: 80, background: snapshot.isDraggingOver ? '#efefff' : 'transparent', borderRadius: 8, transition: 'background 0.2s' }}
+            className="rounded-xl p-2 min-h-24 transition-colors"
+            style={{
+              background: snapshot.isDraggingOver ? '#1e1e32' : '#13131f',
+              border: `0.5px solid ${snapshot.isDraggingOver ? '#3a3a55' : '#1e1e2e'}`,
+            }}
           >
             {tasks.map((task, index) => (
               <TaskCard key={task.id} task={task} index={index} onDelete={onDelete} />
             ))}
             {provided.placeholder}
+            {tasks.length === 0 && !snapshot.isDraggingOver && (
+              <p className="text-xs text-center py-6" style={{ color: '#3a3a5a' }}>
+                Sem tarefas
+              </p>
+            )}
           </div>
         )}
       </Droppable>

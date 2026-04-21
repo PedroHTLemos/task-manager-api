@@ -6,11 +6,12 @@ import { useWorkspaces } from '../hooks/useWorkspaces'
 import { useTasks, useCreateTask, useUpdateTask, useDeleteTask } from '../hooks/useTasks'
 import { KanbanColumn } from '../components/KanbanColumn'
 import { NewTaskModal } from '../components/NewTaskModal'
+import { Logo } from '../components/Logo'
 
 const COLUMNS = [
-  { id: 'TODO', title: 'A fazer', color: '#888' },
-  { id: 'IN_PROGRESS', title: 'Em andamento', color: '#f59e0b' },
-  { id: 'DONE', title: 'Concluído', color: '#10b981' },
+  { id: 'TODO', title: 'A fazer', color: '#4a4a6a' },
+  { id: 'IN_PROGRESS', title: 'Em andamento', color: '#7c6fe0' },
+  { id: 'DONE', title: 'Concluído', color: '#1D9E75' },
 ]
 
 export function Dashboard() {
@@ -39,37 +40,77 @@ export function Dashboard() {
     return tasks?.filter((t: any) => t.status === status) ?? []
   }
 
+  const currentWorkspace = workspaces?.find((w: any) => w.id === workspaceId)
+
   return (
-    <div style={{ minHeight: '100vh', background: '#fafafa' }}>
-      <header style={{ background: 'white', borderBottom: '0.5px solid #e8e8e8', padding: '0 2rem', height: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <h1 style={{ fontSize: 16, fontWeight: 500, margin: 0 }}>Task Manager</h1>
+    <div className="min-h-screen" style={{ background: '#0f0f14' }}>
+
+      <header className="flex items-center justify-between px-6 h-14 border-b" style={{ background: '#1a1a2e', borderColor: '#2a2a45' }}>
+        <div className="flex items-center gap-6">
+          <Logo size="sm" />
           {!loadingWorkspaces && workspaces?.length > 0 && (
-            <select value={workspaceId} onChange={e => setSelectedWorkspaceId(e.target.value)} style={{ fontSize: 14, border: '0.5px solid #ddd', borderRadius: 6, padding: '4px 8px' }}>
+            <select
+              value={workspaceId}
+              onChange={e => setSelectedWorkspaceId(e.target.value)}
+              style={{
+                background: '#0f0f14',
+                border: '0.5px solid #2a2a45',
+                borderRadius: 8,
+                padding: '5px 10px',
+                fontSize: 13,
+                color: '#c8c8e8',
+                width: 'auto',
+              }}
+            >
               {workspaces.map((w: any) => (
                 <option key={w.id} value={w.id}>{w.name}</option>
               ))}
             </select>
           )}
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <span style={{ fontSize: 14, color: '#666' }}>{user?.name}</span>
-          <button onClick={logout} style={{ fontSize: 13 }}>Sair</button>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-medium" style={{ background: '#2a2050', color: '#8b7cf8' }}>
+              {user?.name?.charAt(0).toUpperCase()}
+            </div>
+            <span className="text-sm" style={{ color: '#8888aa' }}>{user?.name}</span>
+          </div>
+          <button
+            onClick={logout}
+            className="text-xs px-3 py-1.5 rounded-lg"
+            style={{ background: '#1a1a2e', border: '0.5px solid #2a2a45', color: '#6b6b8a' }}
+          >
+            Sair
+          </button>
         </div>
       </header>
 
-      <div style={{ padding: '1.5rem 2rem 1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h2 style={{ fontSize: 18, fontWeight: 500, margin: 0 }}>
-          {workspaces?.find((w: any) => w.id === workspaceId)?.name ?? 'Carregando...'}
-        </h2>
-        <button onClick={() => setShowModal(true)}>+ Nova tarefa</button>
+      <div className="flex items-center justify-between px-6 py-5">
+        <div>
+          <h1 className="text-lg font-medium text-white">
+            {currentWorkspace?.name ?? 'Carregando...'}
+          </h1>
+          <p className="text-xs mt-0.5" style={{ color: '#6b6b8a' }}>
+            {tasks?.length ?? 0} tarefas no total
+          </p>
+        </div>
+        <button
+          onClick={() => setShowModal(true)}
+          className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-white"
+          style={{ background: '#7c6fe0' }}
+        >
+          <span style={{ fontSize: 16, lineHeight: 1 }}>+</span>
+          Nova tarefa
+        </button>
       </div>
 
       {loadingTasks ? (
-        <p style={{ padding: '0 2rem', color: '#888' }}>Carregando tarefas...</p>
+        <div className="flex items-center justify-center py-20">
+          <p className="text-sm" style={{ color: '#6b6b8a' }}>Carregando tarefas...</p>
+        </div>
       ) : (
         <DragDropContext onDragEnd={handleDragEnd}>
-          <div style={{ display: 'flex', gap: 16, padding: '0 2rem 2rem', alignItems: 'flex-start' }}>
+          <div className="flex gap-4 px-6 pb-6 overflow-x-auto">
             {COLUMNS.map(col => (
               <KanbanColumn
                 key={col.id}

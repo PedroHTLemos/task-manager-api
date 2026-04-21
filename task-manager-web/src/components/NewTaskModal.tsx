@@ -17,15 +17,58 @@ export function NewTaskModal({ onClose, onCreate, loading }: Props) {
   }
 
   return (
-    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100 }}>
-      <div style={{ background: 'white', borderRadius: 12, padding: '2rem', width: '100%', maxWidth: 420 }}>
-        <h2 style={{ fontSize: 18, fontWeight: 500, marginBottom: 20 }}>Nova tarefa</h2>
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          <input type="text" placeholder="Título da tarefa" value={title} onChange={e => setTitle(e.target.value)} required autoFocus />
-          <textarea placeholder="Descrição (opcional)" value={description} onChange={e => setDescription(e.target.value)} rows={3} style={{ resize: 'vertical', padding: '8px 12px', borderRadius: 8, border: '0.5px solid #ccc', fontSize: 14 }} />
-          <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', marginTop: 8 }}>
-            <button type="button" onClick={onClose} style={{ background: 'none' }}>Cancelar</button>
-            <button type="submit" disabled={loading}>{loading ? 'Criando...' : 'Criar tarefa'}</button>
+    <div
+      className="fixed inset-0 flex items-center justify-center px-4 z-50"
+      style={{ background: 'rgba(0,0,0,0.6)' }}
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+    >
+      <div className="w-full max-w-md rounded-2xl p-6" style={{ background: '#1a1a2e', border: '0.5px solid #2a2a45' }}>
+        <div className="flex items-center justify-between mb-5">
+          <h2 className="text-base font-medium text-white">Nova tarefa</h2>
+          <button onClick={onClose} style={{ background: 'none', color: '#6b6b8a', fontSize: 20, padding: 0, lineHeight: 1 }}>×</button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs" style={{ color: '#8888aa' }}>Título</label>
+            <input
+              type="text"
+              placeholder="Nome da tarefa"
+              value={title}
+              onChange={e => setTitle(e.target.value)}
+              required
+              autoFocus
+            />
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs" style={{ color: '#8888aa' }}>Descrição <span style={{ color: '#4a4a6a' }}>(opcional)</span></label>
+            <textarea
+              placeholder="Detalhes sobre a tarefa..."
+              value={description}
+              onChange={e => setDescription(e.target.value)}
+              rows={3}
+              style={{ resize: 'none' }}
+            />
+          </div>
+
+          <div className="flex gap-2 mt-1">
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 py-2.5 rounded-xl text-sm"
+              style={{ background: '#0f0f14', border: '0.5px solid #2a2a45', color: '#6b6b8a' }}
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white"
+              style={{ background: loading ? '#4a3fa0' : '#7c6fe0' }}
+            >
+              {loading ? 'Criando...' : 'Criar tarefa'}
+            </button>
           </div>
         </form>
       </div>

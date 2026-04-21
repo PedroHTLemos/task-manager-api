@@ -23,32 +23,45 @@ export function TaskCard({ task, index, onDelete }: Props) {
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
+          className="rounded-xl p-3 mb-2 group"
           style={{
-            background: snapshot.isDragging ? '#f0f0ff' : 'white',
-            border: '0.5px solid #e0e0e0',
-            borderRadius: 8,
-            padding: '12px 14px',
-            marginBottom: 8,
+            background: snapshot.isDragging ? '#2a2050' : '#1a1a2e',
+            border: `0.5px solid ${snapshot.isDragging ? '#7c6fe0' : '#2a2a45'}`,
             cursor: 'grab',
             ...provided.draggableProps.style,
           }}
         >
-          <p style={{ fontWeight: 500, fontSize: 14, margin: '0 0 4px' }}>{task.title}</p>
-          {task.description && (
-            <p style={{ fontSize: 12, color: '#888', margin: '0 0 8px' }}>{task.description}</p>
-          )}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            {task.assignee ? (
-              <span style={{ fontSize: 11, background: '#eeedfe', color: '#534ab7', padding: '2px 8px', borderRadius: 20 }}>
-                {task.assignee.name}
-              </span>
-            ) : (
-              <span style={{ fontSize: 11, color: '#aaa' }}>Sem responsável</span>
-            )}
+          <div className="flex items-start justify-between gap-2">
+            <p className="text-sm font-medium leading-snug" style={{ color: '#e8e8f0' }}>
+              {task.title}
+            </p>
             {onDelete && (
-              <button onClick={() => onDelete(task.id)} style={{ background: 'none', border: 'none', color: '#ccc', cursor: 'pointer', fontSize: 16, padding: '0 4px' }}>
+              <button
+                onClick={() => onDelete(task.id)}
+                className="opacity-0 group-hover:opacity-100 flex-shrink-0 w-5 h-5 rounded flex items-center justify-center transition-opacity"
+                style={{ background: 'none', color: '#4a4a6a', fontSize: 16, lineHeight: 1, padding: 0 }}
+              >
                 ×
               </button>
+            )}
+          </div>
+
+          {task.description && (
+            <p className="text-xs mt-1.5 leading-relaxed" style={{ color: '#5a5a7a' }}>
+              {task.description}
+            </p>
+          )}
+
+          <div className="flex items-center mt-3">
+            {task.assignee ? (
+              <div className="flex items-center gap-1.5">
+                <div className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-medium" style={{ background: '#2a2050', color: '#8b7cf8' }}>
+                  {task.assignee.name.charAt(0).toUpperCase()}
+                </div>
+                <span className="text-xs" style={{ color: '#6b6b8a' }}>{task.assignee.name}</span>
+              </div>
+            ) : (
+              <span className="text-xs" style={{ color: '#3a3a5a' }}>Sem responsável</span>
             )}
           </div>
         </div>
