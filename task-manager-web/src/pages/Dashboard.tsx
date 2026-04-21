@@ -7,6 +7,8 @@ import { useTasks, useCreateTask, useUpdateTask, useDeleteTask } from '../hooks/
 import { KanbanColumn } from '../components/KanbanColumn'
 import { NewTaskModal } from '../components/NewTaskModal'
 import { Logo } from '../components/Logo'
+import { SkeletonColumn } from '../components/SkeletonCard'
+import { EmptyWorkspace } from '../components/EmptyWorkspace'
 
 const COLUMNS = [
   { id: 'TODO', title: 'A fazer', color: '#4a4a6a' },
@@ -21,6 +23,7 @@ export function Dashboard() {
   const [showModal, setShowModal] = useState(false)
 
   const workspaceId = selectedWorkspaceId || workspaces?.[0]?.id || ''
+  const hasWorkspaces = !loadingWorkspaces && workspaces?.length > 0
 
   const { data: tasks, isLoading: loadingTasks } = useTasks(workspaceId)
   const createTask = useCreateTask(workspaceId)
@@ -48,7 +51,7 @@ export function Dashboard() {
       <header className="flex items-center justify-between px-6 h-14 border-b" style={{ background: '#1a1a2e', borderColor: '#2a2a45' }}>
         <div className="flex items-center gap-6">
           <Logo size="sm" />
-          {!loadingWorkspaces && workspaces?.length > 0 && (
+          {hasWorkspaces && (
             <select
               value={workspaceId}
               onChange={e => setSelectedWorkspaceId(e.target.value)}
@@ -85,44 +88,58 @@ export function Dashboard() {
         </div>
       </header>
 
-      <div className="flex items-center justify-between px-6 py-5">
-        <div>
-          <h1 className="text-lg font-medium text-white">
-            {currentWorkspace?.name ?? 'Carregando...'}
-          </h1>
-          <p className="text-xs mt-0.5" style={{ color: '#6b6b8a' }}>
-            {tasks?.length ?? 0} tarefas no total
-          </p>
+      {loadingWorkspaces ? (
+        <div className="flex gap-4 px-6 py-5">
+          <SkeletonColumn />
+          <SkeletonColumn />
+          <SkeletonColumn />
         </div>
-        <button
-          onClick={() => setShowModal(true)}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-white"
-          style={{ background: '#7c6fe0' }}
-        >
-          <span style={{ fontSize: 16, lineHeight: 1 }}>+</span>
-          Nova tarefa
-        </button>
-      </div>
-
-      {loadingTasks ? (
-        <div className="flex items-center justify-center py-20">
-          <p className="text-sm" style={{ color: '#6b6b8a' }}>Carregando tarefas...</p>
-        </div>
+      ) : !hasWorkspaces ? (
+        <EmptyWorkspace />
       ) : (
-        <DragDropContext onDragEnd={handleDragEnd}>
-          <div className="flex gap-4 px-6 pb-6 overflow-x-auto">
-            {COLUMNS.map(col => (
-              <KanbanColumn
-                key={col.id}
-                id={col.id}
-                title={col.title}
-                color={col.color}
-                tasks={getTasksByStatus(col.id)}
-                onDelete={(taskId) => deleteTask.mutate(taskId)}
-              />
-            ))}
+        <>
+          <div className="flex items-center justify-between px-6 py-5">
+            <div>
+              <h1 className="text-lg font-medium text-white">
+                {currentWorkspace?.name ?? ''}
+              </h1>
+              <p className="text-xs mt-0.5" style={{ color: '#6b6b8a' }}>
+                {tasks?.length ?? 0} tarefas no total
+              </p>
+            </div>
+            <button
+              onClick={() => setShowModal(true)}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-white"
+              style={{ background: '#7c6fe0' }}
+            >
+              <span style={{ fontSize: 16, lineHeight: 1 }}>+</span>
+              Nova tarefa
+            </button>
           </div>
-        </DragDropContext>
+
+          {loadingTasks ? (
+            <div className="flex gap-4 px-6 pb-6">
+              <SkeletonColumn />
+              <SkeletonColumn />
+              <SkeletonColumn />
+            </div>
+          ) : (
+            <DragDropContext onDragEnd={handleDragEnd}>
+              <div className="flex gap-4 px-6 pb-6 overflow-x-auto">
+                {COLUMNS.map(col => (
+                  <KanbanColumn
+                    key={col.id}
+                    id={col.id}
+                    title={col.title}
+                    color={col.color}
+                    tasks={getTasksByStatus(col.id)}
+                    onDelete={(taskId) => deleteTask.mutate(taskId)}
+                  />
+                ))}
+              </div>
+            </DragDropContext>
+          )}
+        </>
       )}
 
       {showModal && (
