@@ -7,7 +7,15 @@ import taskRoutes from './routes/task.routes'
 
 const app = express()
 
-app.use(cors())
+app.use(cors({
+  origin: [
+    'http://localhost:5173',
+    'http://localhost:5174',
+    /\.vercel\.app$/,
+  ],
+  credentials: true,
+}))
+
 app.use(express.json())
 
 app.get('/health', (req, res) => res.json({ status: 'ok' }))
