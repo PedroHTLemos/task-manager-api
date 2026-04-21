@@ -4,10 +4,8 @@
 
   <p>
     <a href="https://task-manager-web-pearl.vercel.app" target="_blank">
-      <img src="https://img.shields.io/badge/demo-ao%20vivo-7c6fe0?style=for-the-badge" alt="Demo" />
+      <img src="https://img.shields.io/badge/demo-ao%20vivo-7c6fe0?style=for-the-badge" alt="Demo ao vivo" />
     </a>
-    <img src="https://img.shields.io/badge/backend-railway-0B0D0E?style=for-the-badge&logo=railway" alt="Railway" />
-    <img src="https://img.shields.io/badge/frontend-vercel-000?style=for-the-badge&logo=vercel" alt="Vercel" />
   </p>
 </div>
 
