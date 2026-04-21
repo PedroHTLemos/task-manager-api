@@ -1,1 +1,1 @@
-web: node dist/server.js
+web: npx ts-node --transpile-only src/server.ts
