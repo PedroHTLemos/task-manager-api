@@ -1,4 +1,3 @@
-cat > src/contexts/AuthContext.tsx << 'EOF'
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import api from '../api/axios'
 
